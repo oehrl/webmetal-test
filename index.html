@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script id="library" type="x-shader/x-metal">
+#include <metal_stdlib>
+
+using namespace metal;
+
+struct Vertex
+{
+    float4 position [[position]];
+};
+
+vertex Vertex vertex_main(uint vid [[vertex_id]])
+{
+    Vertex v;
+    switch (vid) {
+    case 0:
+        v.position = float4(-.75, -.75, 0, 1);
+        break;
+    case 1:
+        v.position = float4(.75, -.75, 0, 1);
+        break;
+    case 2:
+        v.position = float4(0, .75, 0, 1);
+        break;
+    default:
+        v.position = float4(0, 0, 0, 1);
+    }
+    return v;
+}
+
+fragment float4 fragment_main(Vertex vertexIn [[stage_in]])
+{
+    return float4(1.0, 0.0, 0.0, 1.0);
+}
+
+struct ParticleVertex
+{
+    float4 positionLifetime;
+    float3 x;
+};
+
+struct ParticleVertexOut {
+    float4 position [[position]];
+};
+
+
+vertex ParticleVertexOut particle_vertex_main(
+    device ParticleVertex* vertices [[buffer(0)]],
+    uint vid [[vertex_id]]) {
+    ParticleVertexOut out;
+    out.position = float4(vertices[vid].positionLifetime.xzy, 1.0);
+    return out;
+}
+        </script>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+    <script src="gl-matrix-min.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
